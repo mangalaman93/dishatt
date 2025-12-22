@@ -12,7 +12,12 @@ interface VideoCardProps {
 export function VideoCard({ video, index }: VideoCardProps) {
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    window.open(video.url, '_blank', 'noopener,noreferrer');
+    let url = video.url;
+    // Strip www. from timelesstoday URLs
+    if (url.includes('timelesstoday.com')) {
+      url = url.replace('www.', '');
+    }
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
 
   return (
