@@ -50,8 +50,7 @@ const Index = () => {
 
   const handleClearFilters = useCallback(() => {
     setFilters(initialFilters);
-    performSearch(initialFilters);
-  }, [performSearch]);
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -63,7 +62,6 @@ const Index = () => {
           <FilterPanel
             filters={filters}
             onFilterChange={handleFilterChange}
-            onClearFilters={handleClearFilters}
           />
         </div>
 
