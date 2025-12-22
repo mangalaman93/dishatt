@@ -11,7 +11,7 @@ export function Header() {
         </div>
         <p className="text-lg md:text-xl text-primary-foreground/80 max-w-2xl mx-auto animate-slide-up" style={{
         animationDelay: '100ms'
-      }}>Discover videos from Timeless Today, Prem Rawat official YouTube channel. Begin your journey to inner peace here!</p>
+      }}>Discover videos from Timeless Today and Prem Rawat official YouTube. Begin your journey to inner peace!</p>
       </div>
     </header>;
 }

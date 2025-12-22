@@ -3,7 +3,7 @@ import { Header } from '@/components/Header';
 import { FilterPanel } from '@/components/FilterPanel';
 import { VideoGrid } from '@/components/VideoGrid';
 import { SearchFilters, VideoResult } from '@/types/search';
-import { searchVideos } from '@/lib/api';
+import { searchVideos } from '@/lib/data';
 import { useToast } from '@/hooks/use-toast';
 
 const initialFilters: SearchFilters = {
@@ -15,16 +15,18 @@ const initialFilters: SearchFilters = {
 
 const Index = () => {
   const [filters, setFilters] = useState<SearchFilters>(initialFilters);
-  const [videos, setVideos] = useState<VideoResult[]>([]);
+  const [allVideos, setAllVideos] = useState<VideoResult[]>([]);
+  const [displayedVideos, setDisplayedVideos] = useState<VideoResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(10); // Number of videos to show initially
   const { toast } = useToast();
 
   const performSearch = useCallback(async (searchFilters: SearchFilters) => {
     setIsLoading(true);
-
     try {
-      const response = await searchVideos(searchFilters);
-      setVideos(response.results);
+      const results = await searchVideos(searchFilters);
+      setAllVideos(results);
+      setDisplayedVideos(results.slice(0, visibleCount));
     } catch (error) {
       console.error('Search error:', error);
       toast({
@@ -37,10 +39,16 @@ const Index = () => {
     }
   }, [toast]);
 
-  // Load initial results on mount
+  const handleLoadMore = useCallback(() => {
+    const newCount = visibleCount + 10; // Load 10 more videos
+    setVisibleCount(newCount);
+    setDisplayedVideos(allVideos.slice(0, newCount));
+  }, [allVideos, visibleCount]);
+
+  // Load initial results on mount and when filters change
   useEffect(() => {
     performSearch(filters);
-  }, []);
+  }, [filters, performSearch]);
 
   const handleFilterChange = useCallback((key: keyof SearchFilters, value: string) => {
     const newFilters = { ...filters, [key]: value };
@@ -53,10 +61,10 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <Header />
 
-      <main className="container max-w-6xl mx-auto px-4 py-8 space-y-8">
+      <main className="flex-1 container max-w-6xl mx-auto px-4 py-8 space-y-8">
         {/* Filters */}
         <div className="-mt-20 relative z-20">
           <FilterPanel
@@ -65,16 +73,38 @@ const Index = () => {
           />
         </div>
 
-        {/* Results */}
-        <VideoGrid
-          videos={videos}
-          isLoading={isLoading}
-          hasSearched={true}
-        />
+        {/* Results Header */}
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-semibold text-foreground">
+            {allVideos.length} {allVideos.length === 1 ? 'video' : 'videos'} found
+          </h2>
+        </div>
+
+        {/* Video Grid */}
+        <div className="space-y-8">
+          <VideoGrid
+            videos={displayedVideos}
+            isLoading={isLoading}
+            hasSearched={true}
+          />
+
+          {/* Load More Button */}
+          {allVideos.length > displayedVideos.length && (
+            <div className="flex justify-center pt-4">
+              <button
+                onClick={handleLoadMore}
+                disabled={isLoading}
+                className="px-6 py-2.5 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoading ? 'Loading...' : 'Load More'}
+              </button>
+            </div>
+          )}
+        </div>
       </main>
 
       {/* Footer */}
-      <footer className="py-1">
+      <footer className="py-1 mt-auto">
         <div className="container max-w-6xl mx-auto px-4 text-center">
           <p className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} Aman Mangal

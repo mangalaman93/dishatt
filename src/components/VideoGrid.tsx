@@ -1,6 +1,6 @@
+import { Compass } from 'lucide-react';
 import { VideoResult } from '@/types/search';
 import { VideoCard } from './VideoCard';
-import { Compass } from 'lucide-react';
 
 interface VideoGridProps {
   videos: VideoResult[];
@@ -66,15 +66,10 @@ export function VideoGrid({ videos, isLoading, hasSearched }: VideoGridProps) {
   }
 
   return (
-    <div className="space-y-4">
-      <p className="text-sm text-muted-foreground">
-        Found <span className="font-medium text-foreground">{videos.length}</span> video{videos.length !== 1 ? 's' : ''}
-      </p>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {videos.map((video, index) => (
-          <VideoCard key={video.id} video={video} index={index} />
-        ))}
-      </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {videos.map((video, index) => (
+        <VideoCard key={video.id} video={video} index={index} />
+      ))}
     </div>
   );
 }

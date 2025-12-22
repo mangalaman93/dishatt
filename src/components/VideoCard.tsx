@@ -1,6 +1,7 @@
 import { Play, Clock, Calendar, Globe } from 'lucide-react';
+import { format } from 'date-fns';
 import { VideoResult } from '@/types/search';
-import { formatDuration } from '@/lib/api';
+import { formatDuration, formatLanguage } from '@/lib/data';
 import { Badge } from '@/components/ui/badge';
 
 interface VideoCardProps {
@@ -9,8 +10,14 @@ interface VideoCardProps {
 }
 
 export function VideoCard({ video, index }: VideoCardProps) {
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    window.open(video.url, '_blank', 'noopener,noreferrer');
+  };
+
   return (
     <div
+      onClick={handleClick}
       className="group bg-card rounded-xl overflow-hidden shadow-soft border border-border hover:shadow-card hover:border-primary/30 transition-all duration-300 cursor-pointer animate-slide-up"
       style={{ animationDelay: `${index * 100}ms` }}
     >
@@ -57,12 +64,12 @@ export function VideoCard({ video, index }: VideoCardProps) {
         {/* Meta Info */}
         <div className="flex items-center gap-4 text-xs text-muted-foreground pt-2">
           <span className="flex items-center gap-1">
-            <Calendar className="h-3.5 w-3.5" />
-            {video.publishedYear}
+            <Calendar className="h-3.5 w-3.5 flex-shrink-0" />
+            {format(new Date(video.publishedYear, video.publishedMonth || 0, 1), 'MMM yyyy')}
           </span>
           <span className="flex items-center gap-1 capitalize">
             <Globe className="h-3.5 w-3.5" />
-            {video.language}
+            {formatLanguage(video.language)}
           </span>
           <span className="flex items-center gap-1">
             <Clock className="h-3.5 w-3.5" />

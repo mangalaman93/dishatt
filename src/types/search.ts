@@ -19,16 +19,20 @@ export interface VideoResult {
   title: string;
   description: string;
   thumbnail: string;
-  duration: number;
+  duration: number; // in minutes
   source: 'youtube' | 'timelesstoday';
   publishedYear: number;
-  language: string;
+  publishedMonth?: number; // 0-11 (0 = January)
+  language: 'en' | 'hi';
   url: string;
+  timestamp?: number; // for internal sorting
 }
 
 export interface SearchResponse {
   results: VideoResult[];
   total: number;
+  limit: number;
+  offset: number;
 }
 
 export const DURATION_BANDS: DurationBand[] = [
