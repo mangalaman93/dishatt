@@ -6,6 +6,8 @@ import { SearchFilters, VideoResult } from '@/types/search';
 import { searchVideos } from '@/lib/data';
 import { useToast } from '@/hooks/use-toast';
 
+const STORAGE_KEY = 'disha-filters';
+
 const initialFilters: SearchFilters = {
   language: '',
   source: '',
@@ -13,8 +15,25 @@ const initialFilters: SearchFilters = {
   year: '',
 };
 
+const getStoredFilters = (): SearchFilters => {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    return stored ? JSON.parse(stored) : initialFilters;
+  } catch {
+    return initialFilters;
+  }
+};
+
+const storeFilters = (filters: SearchFilters) => {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(filters));
+  } catch {
+    // Silently fail if localStorage is not available
+  }
+};
+
 const Index = () => {
-  const [filters, setFilters] = useState<SearchFilters>(initialFilters);
+  const [filters, setFilters] = useState<SearchFilters>(getStoredFilters());
   const [allVideos, setAllVideos] = useState<VideoResult[]>([]);
   const [displayedVideos, setDisplayedVideos] = useState<VideoResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -53,11 +72,13 @@ const Index = () => {
   const handleFilterChange = useCallback((key: keyof SearchFilters, value: string) => {
     const newFilters = { ...filters, [key]: value };
     setFilters(newFilters);
+    storeFilters(newFilters);
     performSearch(newFilters);
   }, [filters, performSearch]);
 
   const handleClearFilters = useCallback(() => {
     setFilters(initialFilters);
+    storeFilters(initialFilters);
   }, []);
 
   return (
