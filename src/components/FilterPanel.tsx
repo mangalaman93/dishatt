@@ -1,4 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
 import { SearchFilters, DURATION_BANDS, YEARS, Language, Source } from '@/types/search';
 
 interface FilterPanelProps {
@@ -7,7 +8,6 @@ interface FilterPanelProps {
 }
 
 export function FilterPanel({ filters, onFilterChange }: FilterPanelProps) {
-
   return (
     <div className="w-full bg-card/80 backdrop-blur-sm rounded-xl p-4 shadow-soft border border-border/50 animate-fade-in">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
@@ -71,6 +71,16 @@ export function FilterPanel({ filters, onFilterChange }: FilterPanelProps) {
             <SelectItem value="timelesstoday">Timeless Today</SelectItem>
           </SelectContent>
         </Select>
+      </div>
+
+      {/* Text Search */}
+      <div className="mt-3">
+        <Input
+          placeholder="Search in title (optional)..."
+          value={filters.titleSearch}
+          onChange={(e) => onFilterChange('titleSearch', e.target.value)}
+          className="bg-background/50 border-border/50 hover:border-primary/30 transition-colors"
+        />
       </div>
     </div>
   );

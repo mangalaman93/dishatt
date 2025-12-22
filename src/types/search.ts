@@ -12,6 +12,7 @@ export interface SearchFilters {
   source: Source;
   durationBand: string;
   year: string;
+  titleSearch: string;
 }
 
 export interface VideoResult {

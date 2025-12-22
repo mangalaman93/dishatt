@@ -100,10 +100,23 @@ function filterVideos(
         if (band.max !== undefined && duration >= band.max) return false;
       }
     }
+
+    // Title search - search for each word in the title
+    if (filters.titleSearch) {
+      const searchWords = filters.titleSearch.trim().toLowerCase().split(/\s+/).filter(word => word.length > 0);
+      const title = video.title.toLowerCase();
+
+      // All search words must be found in the title
+      for (const word of searchWords) {
+        if (!title.includes(word)) {
+          return false;
+        }
+      }
+    }
+
     return true;
   });
 }
-
 
 /**
  * Normalizes language codes to the format used in VideoResult ('en' | 'hi')

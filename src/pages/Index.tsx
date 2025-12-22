@@ -13,6 +13,7 @@ const initialFilters: SearchFilters = {
   source: '',
   durationBand: '',
   year: '',
+  titleSearch: '',
 };
 
 const getStoredFilters = (): SearchFilters => {
