@@ -43,10 +43,12 @@ export function VideoCard({ video, index }: VideoCardProps) {
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     let url = video.url;
-    // Strip www. from timelesstoday URLs
-    if (url.includes('timelesstoday.com')) {
-      url = url.replace('www.', '');
+
+    // Ensure timelesstoday.tv URLs don't have www
+    if (url.includes('timelesstoday.tv')) {
+      url = url.replace('//www.', '//');
     }
+
     window.open(url, '_blank', 'noopener,noreferrer');
   };
 
