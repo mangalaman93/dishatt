@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Compass } from 'lucide-react';
 import { VideoResult } from '@/types/search';
 import { VideoCard } from './VideoCard';
@@ -9,6 +10,7 @@ interface VideoGridProps {
 }
 
 export function VideoGrid({ videos, isLoading, hasSearched }: VideoGridProps) {
+  const { t } = useTranslation();
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -36,14 +38,11 @@ export function VideoGrid({ videos, isLoading, hasSearched }: VideoGridProps) {
   if (hasSearched && videos.length === 0) {
     return (
       <div className="text-center py-16 animate-fade-in">
-        <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-muted flex items-center justify-center">
-          <Compass className="h-10 w-10 text-muted-foreground" />
-        </div>
         <h3 className="font-heading text-2xl font-semibold text-foreground mb-2">
-          No videos found
+          {t('results.noVideosFound')}
         </h3>
         <p className="text-muted-foreground max-w-md mx-auto">
-          Try adjusting your search terms or filters to discover more content.
+          {t('results.noVideosMessage')}
         </p>
       </div>
     );
@@ -55,11 +54,10 @@ export function VideoGrid({ videos, isLoading, hasSearched }: VideoGridProps) {
         <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-primary/10 flex items-center justify-center">
           <Compass className="h-10 w-10 text-primary" />
         </div>
-        <h3 className="font-heading text-2xl font-semibold text-foreground mb-2">
-          Begin your journey
-        </h3>
-        <p className="text-muted-foreground max-w-md mx-auto">
-          Search for wisdom, meditation guides, or spiritual teachings to start exploring.
+        <p className="text-muted-foreground text-center py-8">
+          {hasSearched
+            ? t('results.videoCount', { count: videos.length })
+            : t('results.useFilters')}
         </p>
       </div>
     );

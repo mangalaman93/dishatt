@@ -1,0 +1,38 @@
+{
+    "header": {
+        "tagline": "Discover videos from Timeless Today and Prem Rawat official YouTube. Begin your journey to inner peace!"
+    },
+    "filters": {
+        "language": "Language",
+        "duration": "Duration",
+        "year": "Year",
+        "source": "Source",
+        "allLanguages": "All Languages",
+        "allYears": "All Years",
+        "allSources": "All Sources",
+        "allDurations": "All Durations",
+        "searchPlaceholder": "Search in title (optional)...",
+        "reset": "Reset Filters"
+    },
+    "results": {
+        "videoCount_one": "{{count}} video found",
+        "videoCount_other": "{{count}} videos found",
+        "loadMore": "Load More",
+        "loading": "Loading...",
+        "noVideosFound": "No videos found",
+        "noVideosMessage": "Try adjusting your search terms or filters to discover more content.",
+        "useFilters": "Use the filters above to find videos"
+    },
+    "videoCard": {
+        "youtube": "YouTube",
+        "timelessToday": "Timeless Today"
+    },
+    "language": {
+        "english": "English",
+        "hindi": "हिंदी"
+    },
+    "errors": {
+        "searchFailed": "Search failed",
+        "searchFailedMessage": "Unable to fetch results. Please try again."
+    }
+}

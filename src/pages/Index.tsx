@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Header } from '@/components/Header';
 import { FilterPanel } from '@/components/FilterPanel';
 import { VideoGrid } from '@/components/VideoGrid';
@@ -40,6 +41,7 @@ const Index = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [visibleCount, setVisibleCount] = useState(10); // Number of videos to show initially
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   const performSearch = useCallback(async (searchFilters: SearchFilters) => {
     setIsLoading(true);
@@ -77,9 +79,11 @@ const Index = () => {
     performSearch(newFilters);
   }, [filters, performSearch]);
 
-  const handleClearFilters = useCallback(() => {
+  const handleResetFilters = useCallback(() => {
     setFilters(initialFilters);
     storeFilters(initialFilters);
+    // Reset the visible count when filters are reset
+    setVisibleCount(10);
   }, []);
 
   return (
@@ -92,13 +96,14 @@ const Index = () => {
           <FilterPanel
             filters={filters}
             onFilterChange={handleFilterChange}
+            onResetFilters={handleResetFilters}
           />
         </div>
 
         {/* Results Header */}
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-semibold text-foreground">
-            {allVideos.length} {allVideos.length === 1 ? 'video' : 'videos'} found
+            {t('results.videoCount', { count: allVideos.length })}
           </h2>
         </div>
 
@@ -118,7 +123,7 @@ const Index = () => {
                 disabled={isLoading}
                 className="px-6 py-2.5 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isLoading ? 'Loading...' : 'Load More'}
+                {isLoading ? t('results.loading') : t('results.loadMore')}
               </button>
             </div>
           )}

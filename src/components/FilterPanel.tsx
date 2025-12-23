@@ -1,13 +1,46 @@
+import { useTranslation } from 'react-i18next';
+import { RefreshCw } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { SearchFilters, DURATION_BANDS, YEARS, Language, Source } from '@/types/search';
 
+const formatDurationLabel = (label: string, language: string): string => {
+  if (label === 'Any Duration') return label;
+
+  // Handle 'hour' in the label
+  if (label.includes('hour')) {
+    const num = parseInt(label.match(/\d+/)?.[0] || '1', 10);
+    return language === 'hi' ? `${num} घंटे से अधिक` : label;
+  }
+
+  const match = label.match(/([<>-]?\s*\d+)\s*(?:-\s*)?(\d+)?\s*(min)?/);
+  if (!match) return label;
+
+  const [, firstNum, secondNum] = match;
+  const num1 = parseInt(firstNum.replace(/[<>-]/g, '').trim(), 10);
+  const num2 = secondNum ? parseInt(secondNum, 10) : null;
+
+  if (language === 'hi') {
+    if (label.startsWith('<')) {
+      return `${num1} मिनट से कम`;
+    } else if (label.includes('-')) {
+      return `${num1}-${num2} मिनट`;
+    } else if (label.startsWith('>')) {
+      return `${num1} मिनट से अधिक`;
+    }
+  }
+
+  return label; // Return original for English or if no match
+};
+
 interface FilterPanelProps {
   filters: SearchFilters;
   onFilterChange: (key: keyof SearchFilters, value: string) => void;
+  onResetFilters: () => void;
 }
 
-export function FilterPanel({ filters, onFilterChange }: FilterPanelProps) {
+export function FilterPanel({ filters, onFilterChange, onResetFilters }: FilterPanelProps) {
+  const { t, i18n } = useTranslation();
   return (
     <div className="w-full bg-card/80 backdrop-blur-sm rounded-xl p-4 shadow-soft border border-border/50 animate-fade-in">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
@@ -16,12 +49,12 @@ export function FilterPanel({ filters, onFilterChange }: FilterPanelProps) {
           onValueChange={(value) => onFilterChange('language', value === 'all' ? '' : value as Language)}
         >
           <SelectTrigger className="bg-background/50 border-border/50 hover:border-primary/30 transition-colors h-9">
-            <SelectValue placeholder="Language" />
+            <SelectValue placeholder={t('filters.language')} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Languages</SelectItem>
-            <SelectItem value="english">English</SelectItem>
-            <SelectItem value="hindi">Hindi</SelectItem>
+            <SelectItem value="all">{t('filters.allLanguages')}</SelectItem>
+            <SelectItem value="english">{t('language.english')}</SelectItem>
+            <SelectItem value="hindi">{t('language.hindi')}</SelectItem>
           </SelectContent>
         </Select>
 
@@ -30,14 +63,23 @@ export function FilterPanel({ filters, onFilterChange }: FilterPanelProps) {
           onValueChange={(value) => onFilterChange('durationBand', value === 'all' ? '' : value)}
         >
           <SelectTrigger className="bg-background/50 border-border/50 hover:border-primary/30 transition-colors h-9">
-            <SelectValue placeholder="Duration" />
+            <SelectValue placeholder={t('filters.duration')} />
           </SelectTrigger>
           <SelectContent>
-            {DURATION_BANDS.map((band) => (
-              <SelectItem key={band.label} value={band.label === 'Any Duration' ? 'all' : band.label}>
-                {band.label}
-              </SelectItem>
-            ))}
+            {DURATION_BANDS.map((band) => {
+              const displayLabel = band.label === 'Any Duration'
+                ? t('filters.allDurations')
+                : formatDurationLabel(band.label, i18n.language);
+
+              return (
+                <SelectItem
+                  key={band.label}
+                  value={band.label === 'Any Duration' ? 'all' : band.label}
+                >
+                  {displayLabel}
+                </SelectItem>
+              );
+            })}
           </SelectContent>
         </Select>
 
@@ -46,10 +88,10 @@ export function FilterPanel({ filters, onFilterChange }: FilterPanelProps) {
           onValueChange={(value) => onFilterChange('year', value === 'all' ? '' : value)}
         >
           <SelectTrigger className="bg-background/50 border-border/50 hover:border-primary/30 transition-colors h-9">
-            <SelectValue placeholder="Year" />
+            <SelectValue placeholder={t('filters.year')} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Years</SelectItem>
+            <SelectItem value="all">{t('filters.allYears')}</SelectItem>
             {YEARS.map((year) => (
               <SelectItem key={year} value={year}>
                 {year}
@@ -63,29 +105,40 @@ export function FilterPanel({ filters, onFilterChange }: FilterPanelProps) {
           onValueChange={(value) => onFilterChange('source', value === 'all' ? '' : value as Source)}
         >
           <SelectTrigger className="bg-background/50 border-border/50 hover:border-primary/30 transition-colors h-9">
-            <SelectValue placeholder="Source" />
+            <SelectValue placeholder={t('filters.source')} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Sources</SelectItem>
-            <SelectItem value="youtube">YouTube</SelectItem>
-            <SelectItem value="timelesstoday">Timeless Today</SelectItem>
+            <SelectItem value="all">{t('filters.allSources')}</SelectItem>
+            <SelectItem value="youtube">{t('videoCard.youtube')}</SelectItem>
+            <SelectItem value="timelesstoday">{t('videoCard.timelessToday')}</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
       {/* Text Search */}
       <div className="mt-3">
-        <Input
-          placeholder="Search in title (optional)..."
-          value={filters.titleSearch}
-          onChange={(e) => onFilterChange('titleSearch', e.target.value)}
-          className="bg-background/50 border-border/50 hover:border-primary/30 transition-colors"
-          inputMode="search"
-          autoComplete="off"
-          autoCorrect="off"
-          autoCapitalize="off"
-          spellCheck="false"
-        />
+        <div className="flex gap-2">
+          <Input
+            placeholder={t('filters.searchPlaceholder')}
+            value={filters.titleSearch}
+            onChange={(e) => onFilterChange('titleSearch', e.target.value)}
+            className="bg-background/50 border-border/50 hover:border-primary/30 transition-colors flex-1"
+            inputMode="search"
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="off"
+            spellCheck="false"
+          />
+          <button
+            type="button"
+            onClick={onResetFilters}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-normal text-muted-foreground/80 hover:text-foreground/80 hover:bg-muted/30 transition-colors whitespace-nowrap rounded-md border border-border/40 hover:border-border/60"
+            title={t('filters.reset')}
+          >
+            <RefreshCw className="h-3.5 w-3.5" />
+            <span>{t('filters.reset')}</span>
+          </button>
+        </div>
       </div>
     </div>
   );

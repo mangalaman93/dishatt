@@ -1,5 +1,16 @@
+import { useTranslation } from 'react-i18next';
+import { LanguageSwitcher } from './LanguageSwitcher';
+
 export function Header() {
-  return <header className="bg-hero text-primary-foreground py-16 px-4 relative overflow-hidden">
+  const { t } = useTranslation();
+
+  return (
+    <header className="bg-hero text-primary-foreground py-16 px-4 relative overflow-hidden">
+      {/* Language switcher in top-right corner */}
+      <div className="absolute top-4 right-4 z-20">
+        <LanguageSwitcher />
+      </div>
+
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-1/2 -right-1/4 w-96 h-96 rounded-full bg-secondary/20 blur-3xl" />
@@ -10,8 +21,11 @@ export function Header() {
         <div className="inline-flex items-center gap-3 mb-6 animate-fade-in">
         </div>
         <p className="text-lg md:text-xl text-primary-foreground/80 max-w-2xl mx-auto animate-slide-up" style={{
-        animationDelay: '100ms'
-      }}>Discover videos from Timeless Today and Prem Rawat official YouTube. Begin your journey to inner peace!</p>
+          animationDelay: '100ms'
+        }}>
+          {t('header.tagline')}
+        </p>
       </div>
-    </header>;
+    </header>
+  );
 }
