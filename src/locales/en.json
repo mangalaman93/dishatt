@@ -29,16 +29,11 @@
     "videoCard": {
         "youtube": "YouTube",
         "timelessToday": "Timeless Today",
-        "watched": "Watched",
-        "markWatched": "Mark as watched",
-        "markUnwatched": "Mark as unwatched"
+        "markWatched": "Watched",
+        "markUnwatched": "Unwatched"
     },
     "language": {
         "english": "English",
         "hindi": "हिंदी"
-    },
-    "errors": {
-        "searchFailed": "Search failed",
-        "searchFailedMessage": "Unable to fetch results. Please try again."
     }
 }

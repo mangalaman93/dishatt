@@ -23,22 +23,17 @@
         "noVideosFound": "कोई वीडियो नहीं मिला",
         "noVideosMessage": "और सामग्री खोजने के लिए अपने खोज शब्द या फ़िल्टर बदलने का प्रयास करें।",
         "useFilters": "वीडियो खोजने के लिए ऊपर दिए गए फ़िल्टर्स का उपयोग करें",
-        "showWatched": "देखे गए दिखाएं ({{count}})",
-        "hideWatched": "देखे गए छुपाएं"
+        "showWatched": "देखी हुई दिखाएं ({{count}})",
+        "hideWatched": "देखी हुई छुपाएं"
     },
     "videoCard": {
         "youtube": "यूट्यूब",
         "timelessToday": "टाइमलेस टुडे",
-        "watched": "देखा गया",
-        "markWatched": "देखा गया चिह्नित करें",
-        "markUnwatched": "अनदेखा चिह्नित करें"
+        "markWatched": "देखी हुई है",
+        "markUnwatched": "नहीं देखी है"
     },
     "language": {
         "english": "English",
         "hindi": "हिंदी"
-    },
-    "errors": {
-        "searchFailed": "खोज विफल रही",
-        "searchFailedMessage": "परिणाम प्राप्त नहीं किए जा सके। कृपया पुनः प्रयास करें।"
     }
 }

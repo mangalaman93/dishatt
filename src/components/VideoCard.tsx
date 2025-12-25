@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Play, Calendar, Clock, Globe, Sparkles, Check } from 'lucide-react';
+import { Check, Calendar, Globe, Clock, Play, Sparkles, Eye, EyeOff, Plus } from 'lucide-react';
 import { VideoResult } from '@/types/search';
 import { Badge } from './ui/badge';
 import { isThisMonth } from 'date-fns';
@@ -72,7 +72,6 @@ export function VideoCard({ video, index, isWatched = false, onToggleWatched }: 
           width={355}
           height={200}
           loading={index < 3 ? "eager" : "lazy"}
-          fetchPriority={index === 0 ? "high" : undefined}
           decoding="async"
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
@@ -102,16 +101,18 @@ export function VideoCard({ video, index, isWatched = false, onToggleWatched }: 
       </div>
 
       {/* Content */}
-      <div className="p-4 space-y-3">
-        <h3 className="font-heading text-lg font-semibold text-foreground line-clamp-2 group-hover:text-primary transition-colors duration-200">
-          {video.title}
-        </h3>
-        <p className="text-sm text-muted-foreground line-clamp-2">
-          {video.description}
-        </p>
+      <div className="px-3 pt-1.5 pb-1.5 flex flex-col h-[125px]">
+        <div className="flex-grow">
+          <h3 className="font-heading text-xl font-semibold text-foreground line-clamp-2 group-hover:text-primary transition-colors duration-200">
+            {video.title}
+          </h3>
+          <p className="text-sm text-muted-foreground line-clamp-2">
+            {video.description}
+          </p>
+        </div>
 
         {/* Meta Info and Watched Button */}
-        <div className="flex items-center justify-between gap-2 pt-2">
+        <div className="flex items-center justify-between gap-2 pt-1">
           <div className="flex items-center gap-4 text-xs text-muted-foreground">
             <span className="flex items-center gap-1.5">
               <Calendar className="h-3.5 w-3.5 flex-shrink-0" />
@@ -136,16 +137,17 @@ export function VideoCard({ video, index, isWatched = false, onToggleWatched }: 
           {/* Watched Toggle Button */}
           <button
             onClick={handleToggleWatched}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-all duration-200 ${
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-all duration-200 border min-w-0 max-w-[160px] shadow-sm hover:shadow-md active:scale-95 ${
               isWatched
-                ? 'bg-primary/15 text-primary border border-primary/30'
-                : 'bg-muted text-muted-foreground hover:bg-muted/80 border border-transparent'
+                ? 'bg-muted/70 text-muted-foreground border-border hover:bg-muted'
+                : 'bg-primary text-primary-foreground border-primary hover:bg-primary/90'
             }`}
-            title={isWatched ? t('videoCard.markUnwatched') : t('videoCard.markWatched')}
             aria-label={isWatched ? t('videoCard.markUnwatched') : t('videoCard.markWatched')}
           >
-            <Check className={`h-3.5 w-3.5 ${isWatched ? 'opacity-100' : 'opacity-50'}`} />
-            {isWatched ? t('videoCard.watched') : t('videoCard.watched')}
+            <span className="truncate">
+              {isWatched ? t('videoCard.markWatched') : t('videoCard.markUnwatched')}
+            </span>
+            {isWatched ? <Check className="h-3 w-3 opacity-50" /> : <Plus className="h-3 w-3 opacity-50" />}
           </button>
         </div>
       </div>
