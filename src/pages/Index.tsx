@@ -1,13 +1,11 @@
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Eye, EyeOff } from 'lucide-react';
 import { Header } from '@/components/Header';
 import { FilterPanel } from '@/components/FilterPanel';
 import { VideoGrid } from '@/components/VideoGrid';
 import { searchVideos } from '@/lib/data';
 import { SearchFilters, VideoResult } from '@/types/search';
 import { useToast } from '@/hooks/use-toast';
-import { useWatchedVideos } from '@/hooks/useWatchedVideos';
 
 const FILTERS_STORAGE_KEY = 'videoSearchFilters';
 
@@ -40,19 +38,9 @@ const Index = () => {
   const [allVideos, setAllVideos] = useState<VideoResult[]>([]);
   const [displayedVideos, setDisplayedVideos] = useState<VideoResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(10);
+  const [visibleCount, setVisibleCount] = useState(12);
   const { toast } = useToast();
   const { t } = useTranslation();
-
-  const {
-    watchedIds,
-    showWatched,
-    watchedCount,
-    markAsWatched,
-    unmarkAsWatched,
-    isWatched,
-    toggleShowWatched,
-  } = useWatchedVideos();
 
   const performSearch = useCallback(async (searchFilters: SearchFilters) => {
     setIsLoading(true);
@@ -71,21 +59,13 @@ const Index = () => {
     }
   }, [toast]);
 
-  // Filter videos based on watched status
-  const filteredVideos = useMemo(() => {
-    if (showWatched) {
-      return allVideos;
-    }
-    return allVideos.filter((video) => !isWatched(video.id));
-  }, [allVideos, showWatched, isWatched]);
-
-  // Update displayed videos when filteredVideos or visibleCount changes
+  // Update displayed videos when allVideos or visibleCount changes
   useEffect(() => {
-    setDisplayedVideos(filteredVideos.slice(0, visibleCount));
-  }, [filteredVideos, visibleCount]);
+    setDisplayedVideos(allVideos.slice(0, visibleCount));
+  }, [allVideos, visibleCount]);
 
   const handleLoadMore = useCallback(() => {
-    const newCount = visibleCount + 10;
+    const newCount = visibleCount + 12;
     setVisibleCount(newCount);
   }, [visibleCount]);
 
@@ -104,16 +84,9 @@ const Index = () => {
   const handleResetFilters = useCallback(() => {
     setFilters(initialFilters);
     storeFilters(initialFilters);
-    setVisibleCount(10);
+    setVisibleCount(12);
   }, []);
 
-  const handleToggleWatched = useCallback((videoId: string, watched: boolean) => {
-    if (watched) {
-      markAsWatched(videoId);
-    } else {
-      unmarkAsWatched(videoId);
-    }
-  }, [markAsWatched, unmarkAsWatched]);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -132,24 +105,8 @@ const Index = () => {
         {/* Results Header */}
         <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
           <h2 className="text-2xl font-semibold text-foreground">
-            {t('results.videoCount', { count: filteredVideos.length })}
+            {t('results.videoCount', { count: allVideos.length })}
           </h2>
-
-          {/* Show Watched Toggle */}
-          <button
-            onClick={toggleShowWatched}
-            className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-              showWatched
-                ? 'bg-primary text-primary-foreground'
-                : 'bg-muted text-muted-foreground hover:bg-muted/80'
-            }`}
-            aria-label={showWatched ? t('results.hideWatched') : t('results.showWatched')}
-          >
-            {showWatched ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
-            {showWatched
-              ? t('results.hideWatched')
-              : t('results.showWatched', { count: watchedCount })}
-          </button>
         </div>
 
         {/* Video Grid */}
@@ -158,12 +115,10 @@ const Index = () => {
             videos={displayedVideos}
             isLoading={isLoading}
             hasSearched={true}
-            watchedIds={watchedIds}
-            onToggleWatched={handleToggleWatched}
           />
 
           {/* Load More Button */}
-          {filteredVideos.length > displayedVideos.length && (
+          {allVideos.length > displayedVideos.length && (
             <div className="flex justify-center pt-4">
               <button
                 onClick={handleLoadMore}

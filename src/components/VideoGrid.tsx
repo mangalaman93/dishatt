@@ -7,11 +7,9 @@ interface VideoGridProps {
   videos: VideoResult[];
   isLoading: boolean;
   hasSearched: boolean;
-  watchedIds?: Set<string>;
-  onToggleWatched?: (videoId: string, watched: boolean) => void;
 }
 
-export function VideoGrid({ videos, isLoading, hasSearched, watchedIds, onToggleWatched }: VideoGridProps) {
+export function VideoGrid({ videos, isLoading, hasSearched }: VideoGridProps) {
   const { t } = useTranslation();
 
   // Container with min-height to prevent layout shifts
@@ -79,8 +77,6 @@ export function VideoGrid({ videos, isLoading, hasSearched, watchedIds, onToggle
             key={video.id}
             video={video}
             index={index}
-            isWatched={watchedIds?.has(video.id)}
-            onToggleWatched={onToggleWatched}
           />
         ))}
       </div>

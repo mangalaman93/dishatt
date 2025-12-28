@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Check, Calendar, Globe, Clock, Play, Sparkles, Plus } from 'lucide-react';
+import { Calendar, Globe, Clock, Play, Sparkles } from 'lucide-react';
 import { VideoResult } from '@/types/search';
 import { Badge } from './ui/badge';
 import { isThisMonth } from 'date-fns';
@@ -31,11 +31,9 @@ function formatLanguage(langCode: string): string {
 interface VideoCardProps {
   video: VideoResult;
   index: number;
-  isWatched?: boolean;
-  onToggleWatched?: (videoId: string, watched: boolean) => void;
 }
 
-export function VideoCard({ video, index, isWatched = false, onToggleWatched }: VideoCardProps) {
+export function VideoCard({ video, index }: VideoCardProps) {
   const { t, i18n } = useTranslation();
   const currentLanguage = i18n.language;
   const videoDate = new Date(video.publishedYear, video.publishedMonth ? video.publishedMonth - 1 : 0, 1);
@@ -53,10 +51,6 @@ export function VideoCard({ video, index, isWatched = false, onToggleWatched }: 
     window.open(url, '_blank', 'noopener,noreferrer');
   };
 
-  const handleToggleWatched = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onToggleWatched?.(video.id, !isWatched);
-  };
 
   return (
     <div
@@ -111,44 +105,26 @@ export function VideoCard({ video, index, isWatched = false, onToggleWatched }: 
           </p>
         </div>
 
-        {/* Meta Info and Watched Button */}
-        <div className="flex items-center justify-between gap-2 pt-1">
-          <div className="flex items-center gap-4 text-xs text-muted-foreground">
-            <span className="flex items-center gap-1.5">
-              <Calendar className="h-3.5 w-3.5 flex-shrink-0" />
-              {formatDate(videoDate)}
-              {isNew && (
-                <Badge variant="default" className="ml-1 bg-green-600 hover:bg-green-700 text-xs h-4 px-1.5">
-                  <Sparkles className="h-2.5 w-2.5 mr-1" />
-                  {t('results.new')}
-                </Badge>
-              )}
-            </span>
-            <span className="flex items-center gap-1 capitalize">
-              <Globe className="h-3.5 w-3.5" />
-              {formatLanguage(video.language)}
-            </span>
-            <span className="flex items-center gap-1">
-              <Clock className="h-3.5 w-3.5" />
-              {formatDuration(video.duration, currentLanguage)}
-            </span>
-          </div>
-
-          {/* Watched Toggle Button */}
-          <button
-            onClick={handleToggleWatched}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-all duration-200 border min-w-0 max-w-[160px] shadow-sm hover:shadow-md active:scale-95 ${
-              isWatched
-                ? 'bg-muted/70 text-muted-foreground border-border hover:bg-muted'
-                : 'bg-primary text-primary-foreground border-primary hover:bg-primary/90'
-            }`}
-            aria-label={isWatched ? t('videoCard.markUnwatched') : t('videoCard.markWatched')}
-          >
-            <span className="truncate">
-              {isWatched ? t('videoCard.markWatched') : t('videoCard.markUnwatched')}
-            </span>
-            {isWatched ? <Check className="h-3 w-3 opacity-50" /> : <Plus className="h-3 w-3 opacity-50" />}
-          </button>
+        {/* Meta Info */}
+        <div className="flex items-center gap-4 text-xs text-muted-foreground">
+          <span className="flex items-center gap-1.5">
+            <Calendar className="h-3.5 w-3.5 flex-shrink-0" />
+            {formatDate(videoDate)}
+            {isNew && (
+              <Badge variant="default" className="ml-1 bg-green-600 hover:bg-green-700 text-xs h-4 px-1.5">
+                <Sparkles className="h-2.5 w-2.5 mr-1" />
+                {t('results.new')}
+              </Badge>
+            )}
+          </span>
+          <span className="flex items-center gap-1 capitalize">
+            <Globe className="h-3.5 w-3.5" />
+            {formatLanguage(video.language)}
+          </span>
+          <span className="flex items-center gap-1">
+            <Clock className="h-3.5 w-3.5" />
+            {formatDuration(video.duration, currentLanguage)}
+          </span>
         </div>
       </div>
     </div>
