@@ -58,9 +58,15 @@ export function FilterPanel({ filters, onFilterChange, onResetFilters }: FilterP
     onFilterChange('durationBands', newValue);
   };
 
+  const handleAllDurationsToggle = () => {
+    const current = filters.durationBands || [];
+    const allSelected = current.length === durationOptions.length;
+    onFilterChange('durationBands', allSelected ? [] : durationOptions.map(d => d.label));
+  };
+
   const getDurationDisplayText = () => {
     const selected = filters.durationBands || [];
-    if (selected.length === 0) return t('filters.allDurations');
+    if (selected.length === 0 || selected.length === durationOptions.length) return t('filters.allDurations');
     if (selected.length === 1) return formatDurationLabel(selected[0], i18n.language);
     return `${selected.length} ${t('filters.selected')}`;
   };
@@ -88,6 +94,13 @@ export function FilterPanel({ filters, onFilterChange, onResetFilters }: FilterP
             <ChevronDown className="h-4 w-4 opacity-50 shrink-0" />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-48">
+            <DropdownMenuCheckboxItem
+              checked={(filters.durationBands || []).length === durationOptions.length}
+              onCheckedChange={handleAllDurationsToggle}
+              onSelect={(e) => e.preventDefault()}
+            >
+              {t('filters.allDurations')}
+            </DropdownMenuCheckboxItem>
             {durationOptions.map((band) => {
               const displayLabel = formatDurationLabel(band.label, i18n.language);
               const isSelected = (filters.durationBands || []).includes(band.label);
