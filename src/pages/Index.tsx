@@ -44,6 +44,7 @@ const Index = () => {
 
   const performSearch = useCallback(async (searchFilters: SearchFilters) => {
     setIsLoading(true);
+    setVisibleCount(12); // Reset to initial count on new search
     try {
       const results = await searchVideos(searchFilters);
       setAllVideos(results);
