@@ -90,6 +90,16 @@ export function VideoCard({ video, index }: VideoCardProps) {
         >
           {video.source === 'youtube' ? t('videoCard.youtube') : t('videoCard.timelessToday')}
         </Badge>
+        {/* New Badge */}
+        {isNew && (
+          <Badge
+            variant="default"
+            className="absolute top-3 right-3 bg-green-600 hover:bg-green-700 text-xs h-5 px-2"
+          >
+            <Sparkles className="h-2.5 w-2.5 mr-1" />
+            {t('results.new')}
+          </Badge>
+        )}
       </div>
       {/* Content */}
       <div className="px-3 pt-1 pb-1 flex flex-col h-[90px]">
@@ -109,23 +119,10 @@ export function VideoCard({ video, index }: VideoCardProps) {
           <span className="flex items-center gap-1.5">
             <Calendar className="h-3.5 w-3.5 flex-shrink-0" />
             {formatDate(videoDate)}
-            {isNew && (
-              <Badge
-                variant="default"
-                className="ml-1 bg-green-600 hover:bg-green-700 text-xs h-4 px-1.5"
-              >
-                <Sparkles className="h-2.5 w-2.5 mr-1" />
-                {t('results.new')}
-              </Badge>
-            )}
           </span>
           <span className="flex items-center gap-1 capitalize">
             <Globe className="h-3.5 w-3.5" />
             {formatLanguage(video.language)}
-          </span>
-          <span className="flex items-center gap-1">
-            <Clock className="h-3.5 w-3.5" />
-            {formatDuration(video.duration, currentLanguage)}
           </span>
         </div>
       </div>
