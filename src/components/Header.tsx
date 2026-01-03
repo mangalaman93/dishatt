@@ -1,11 +1,13 @@
 import { useTranslation } from 'react-i18next';
 import { LanguageSwitcher } from './LanguageSwitcher';
+import { DarkModeToggle } from './DarkModeToggle';
 export function Header() {
   const { t } = useTranslation();
   return (
     <header className="bg-hero text-primary-foreground py-8 md:py-16 px-4 relative overflow-hidden">
-      {/* Language switcher in top-right corner */}
-      <div className="absolute top-4 right-4 z-30">
+      {/* Language switcher and dark mode toggle in top-right corner */}
+      <div className="absolute top-4 right-4 z-30 flex items-center gap-2">
+        <DarkModeToggle />
         <LanguageSwitcher />
       </div>
       {/* Background decoration */}
@@ -17,7 +19,7 @@ export function Header() {
       </div>
       <div className="container max-w-4xl mx-auto text-center relative z-10">
         <p
-          className="text-base md:text-lg md:text-xl text-primary-foreground/80
+          className="text-base md:text-lg text-primary-foreground/80 dark:text-white/90
                      max-w-2xl mx-auto animate-slide-up"
           style={{ animationDelay: '100ms' }}
         >
